@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
@@ -26,20 +27,13 @@ import com.sommerengineering.robinhoodinterview.ui.theme.RobinhoodInterviewTheme
 
 class MainActivity : ComponentActivity() {
 
-    val viewModel: RobinhoodViewModel by viewModels()
+    private val viewModel: RobinhoodViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        // launch network request
-        viewModel.getInstruments()
-
         setContent {
             RobinhoodInterviewTheme {
-
-                val instruments by viewModel.instruments
-
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()) { innerPadding ->
@@ -47,26 +41,29 @@ class MainActivity : ComponentActivity() {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
+                            .padding(innerPadding)
                             .padding(48.dp)) {
 
                         // user text input
-                        var text by remember { mutableStateOf("Filter ...") }
-                        var filteredInstruments: List<Instrument> by remember { mutableStateOf(listOf()) }
+                        var text by remember { mutableStateOf("") }
+                        var filteredInstruments by remember { viewModel.instruments }
 
                         TextField(
                             value = text,
                             onValueChange = { filterByChars ->
                                 text = filterByChars
-                                filteredInstruments = instruments.filter { instrument ->
-                                    instrument.instrument_type.contains(filterByChars)
+                                filteredInstruments = viewModel.instruments.value.filter {
+                                    it.instrument_type.contains(filterByChars)
                                 }
-                            })
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth())
 
                         Spacer(
                             modifier = Modifier.size(16.dp))
 
                         filteredInstruments.forEach { instrument ->
-                            Text("name: ${instrument.name}")
+                            Text(instrument.name)
                         }
                     }
                 }

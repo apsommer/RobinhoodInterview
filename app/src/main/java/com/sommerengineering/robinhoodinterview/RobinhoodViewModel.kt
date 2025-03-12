@@ -10,6 +10,10 @@ class RobinhoodViewModel : ViewModel() {
 
     val instruments: MutableState<List<Instrument>> = mutableStateOf(listOf())
 
+    init {
+        getInstruments()
+    }
+
     fun getInstruments() {
         viewModelScope.launch {
             instruments.value = RobinhoodApi.retrofitService.getInstruments()
