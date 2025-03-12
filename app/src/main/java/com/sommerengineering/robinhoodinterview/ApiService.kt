@@ -12,7 +12,6 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface RobinHoodService {
-
     @GET("instruments.json")
     suspend fun getInstruments(): List<Instrument>
 }

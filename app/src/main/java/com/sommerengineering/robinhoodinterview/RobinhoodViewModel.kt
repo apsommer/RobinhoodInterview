@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-
 class RobinhoodViewModel : ViewModel() {
 
     val instruments: MutableState<List<Instrument>> = mutableStateOf(listOf())
